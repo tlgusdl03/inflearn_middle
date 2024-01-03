@@ -1,0 +1,29 @@
+JWT란?
+    Json Web Token의 약자, 토큰의 특수한 형태
+    Header, Payload, Signature 세 부분으로 구성되어 있음
+    Base64로 인코딩 되어 있음
+    Header : 토큰의 타입과 암호화 알고리즘으로 구성
+    Payload : 발행일 만료일 사용자 ID등으로 구성
+    Signature : Header와 Payload를 알고리즘으로 싸인한 값이 들어있음
+    이 값을 기반으로 토큰이 조작되었는지 확인할 수 있음
+    Signature는 Header, Payload중 어떤 것이 변경되어도 변경됨
+
+Refresh Token & Access Token
+    Access Token은 API 요청시 검증용 토큰으로 사용됨 인증이 필요한 API 사용시
+    헤더에 넣어서 보내야 함
+    Refresh Token은 Access Token을 추가로 발급할 때 사용함 Access Token을
+    새로고침 하는 기능이 있음
+    Access Token의 유효기간은 짧고 Refresh Token의 유효기간은 길다.
+    Access Token은 자주 노출되기 때문에 유효기간을 짧게 함
+    Refresh Token은 자주 노출되지 않기 때문에 유효기간을 길게 함
+
+    username:password를 base64로 인코딩한 값을 Authorization 헤더에 넣어서
+    Basic $token 형태로 보냄
+    토큰이 Header에 들어갈 때에는 Bearer $token 형태로 보냄
+
+    Acess 토큰을 이용해 API요청
+    서버에서 검증후 응답
+    401에러가 반환되면 Refresh 토큰을 이용해 Access 토큰 재발급 요청
+    서버에서 검증후 응답
+    새로고침 되면 Access 토큰을 이용해 API요청
+    Refreahtoken이 만료되면 로그아웃 후 로그인 페이지로 이동
