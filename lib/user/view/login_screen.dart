@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:inputform_proj/common/component/custom_text_form.dart';
 import 'package:inputform_proj/common/const/colors.dart';
@@ -8,6 +12,16 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //dio를 두번 사용하기 위한 인스턴스 생성
+    final dio = Dio();
+
+    //안드로이드 에뮬레이터 ip주소 10.0.2.2
+    //ios 시뮬레이터 ip주소는 같다.
+    final emulatorIp = '10.0.2.2:3000';
+    final simulatorIp = '127.0.0.1:3000';
+
+    final ip = Platform.isIOS ? simulatorIp : emulatorIp;
+
     return DefaultLayout(
       child: SingleChildScrollView(
         //화면을 스크롤 가능하게 만드는 위젯
@@ -41,7 +55,24 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  //api 연동 비동기로 진행하기 위해 async 사용
+                  onPressed: () async {
+                    // ID:PassWord
+                    final rawString = 'test@codefactory.ai:testtest';
+
+                    // Base64로 인코딩하는 코드, 어떻게 인코딩할지 정의함
+                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                    // 인코딩된 값을 token에 저장
+                    String token = stringToBase64.encode(rawString);
+
+                    final resp = await dio.post(
+                      'http://$ip/auth/login',
+                      options: Options(
+                        headers: {'authorization': 'Basic $token'},
+                      ),
+                    );
+                    print(resp.data);
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
                   ),

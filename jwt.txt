@@ -27,3 +27,6 @@ Refresh Token & Access Token
     서버에서 검증후 응답
     새로고침 되면 Access 토큰을 이용해 API요청
     Refreahtoken이 만료되면 로그아웃 후 로그인 페이지로 이동
+
+Postman 사용
+    auth/login api 호출시 Headers/authorization에 Basic 아이디:비밀번호를 base64로 인코딩한 값을 넣어서 호출
