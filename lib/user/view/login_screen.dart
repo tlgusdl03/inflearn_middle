@@ -79,7 +79,17 @@ class LoginScreen extends StatelessWidget {
                   child: Text('로그인'),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async{
+                    //token api 연동
+                    final refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNDc5ODcxMiwiZXhwIjoxNzA0ODg1MTEyfQ.1o-YPI4CZ2HibRnWCcw20jpFXTf30QXbrO7NbZf3Ggw';
+                    final resp = await dio.post(
+                      'http://$ip/auth/token',
+                      options: Options(
+                        headers: {'authorization': 'Bearer $refreshToken'},
+                      ),
+                    );
+                    print(resp.data);
+                  },
                   style: TextButton.styleFrom(
                     primary: Colors.black,
                   ),
