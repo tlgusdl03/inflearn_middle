@@ -6,10 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:inputform_proj/common/component/custom_text_form.dart';
 import 'package:inputform_proj/common/const/colors.dart';
 import 'package:inputform_proj/common/layout/default_layout.dart';
+import 'package:inputform_proj/common/view/root_tab.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
 
+class _LoginScreenState extends State<LoginScreen> {
+  String username = '';
+  String password = '';
   @override
   Widget build(BuildContext context) {
     //dio를 두번 사용하기 위한 인스턴스 생성
@@ -45,12 +52,16 @@ class LoginScreen extends StatelessWidget {
                 ),
                 CustomTextFormField(
                   hintText: '이메일을 입력해주세요.',
-                  onChanged: (String value) {},
+                  onChanged: (String value) {
+                    username = value;
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextFormField(
                   hintText: '비밀번호를 입력해주세요.',
-                  onChanged: (String value) {},
+                  onChanged: (String value) {
+                    password = value;
+                  },
                   obscureText: true,
                 ),
                 const SizedBox(height: 16.0),
@@ -58,7 +69,9 @@ class LoginScreen extends StatelessWidget {
                   //api 연동 비동기로 진행하기 위해 async 사용
                   onPressed: () async {
                     // ID:PassWord
-                    final rawString = 'test@codefactory.ai:testtest';
+                    final rawString = '$username:$password';
+
+                    print(rawString);
 
                     // Base64로 인코딩하는 코드, 어떻게 인코딩할지 정의함
                     Codec<String, String> stringToBase64 = utf8.fuse(base64);
@@ -71,6 +84,13 @@ class LoginScreen extends StatelessWidget {
                         headers: {'authorization': 'Basic $token'},
                       ),
                     );
+
+                    //로그인 성공 시 화면 전환
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => RootTab(),
+                      ),
+                    );
                     print(resp.data);
                   },
                   style: ElevatedButton.styleFrom(
@@ -79,9 +99,10 @@ class LoginScreen extends StatelessWidget {
                   child: Text('로그인'),
                 ),
                 TextButton(
-                  onPressed: () async{
-                    //token api 연동
-                    final refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNDc5ODcxMiwiZXhwIjoxNzA0ODg1MTEyfQ.1o-YPI4CZ2HibRnWCcw20jpFXTf30QXbrO7NbZf3Ggw';
+                  onPressed: () async {
+                    //token api 연동 로컬호스트임에도 딜레이가 있음 실전 서버임을 가정하고 서버 측 코드에서 500ms 딜레이가 존재하기 때문
+                    final refreshToken =
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwNDc5ODcxMiwiZXhwIjoxNzA0ODg1MTEyfQ.1o-YPI4CZ2HibRnWCcw20jpFXTf30QXbrO7NbZf3Ggw';
                     final resp = await dio.post(
                       'http://$ip/auth/token',
                       options: Options(
