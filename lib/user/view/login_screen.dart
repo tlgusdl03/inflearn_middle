@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inputform_proj/common/component/custom_text_form.dart';
 import 'package:inputform_proj/common/const/colors.dart';
+import 'package:inputform_proj/common/const/data.dart';
 import 'package:inputform_proj/common/layout/default_layout.dart';
 import 'package:inputform_proj/common/view/root_tab.dart';
 
@@ -19,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String password = '';
   @override
   Widget build(BuildContext context) {
+    final storage = FlutterSecureStorage();
     //dio를 두번 사용하기 위한 인스턴스 생성
     final dio = Dio();
 
@@ -85,13 +88,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
 
+                    //로그인 성공시 받아오는 토큰 저장
+                    final refreshToken = resp.data['refreshToken'];
+                    final accessToken = resp.data['accessToken'];
+                    
+                    await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+                    await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
+
                     //로그인 성공 시 화면 전환
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => RootTab(),
                       ),
                     );
-                    print(resp.data);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
