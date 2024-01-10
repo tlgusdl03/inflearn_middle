@@ -21,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String password = '';
   @override
   Widget build(BuildContext context) {
-    final storage = FlutterSecureStorage();
     //dio를 두번 사용하기 위한 인스턴스 생성
     final dio = Dio();
 
