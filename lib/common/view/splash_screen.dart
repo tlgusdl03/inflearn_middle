@@ -43,6 +43,10 @@ class _SplashScreenState extends State<SplashScreen> {
           headers: {'authorization': 'Bearer $refreshToken'},
         ),
       );
+
+      //accessToken으로 refresh토큰을 갱신하는 코드
+      await storage.write(key: ACCESS_TOKEN_KEY, value: resp.data['accessToken']);
+
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (_) => RootTab(),
